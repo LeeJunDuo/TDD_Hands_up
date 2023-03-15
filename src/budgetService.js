@@ -10,7 +10,7 @@ export class BudgetService {
     this.budgetRepo = budgetRepo;
   }
 
-  getDayOfMonth(_budget, format) {
+  getDaysInMonth(_budget, format) {
     return dayjs(_budget.YearMonth, format).daysInMonth();
   }
 
@@ -23,7 +23,7 @@ export class BudgetService {
     const allBudget = this.queryDB();
 
     allBudget.forEach((_budget) => {
-      const budgetFor1Day = _budget.Amount / this.getDayOfMonth(_budget, 'YYYYMM')
+      const budgetFor1Day = this.getSingleBudgetOfMonth(_budget)
       this.monthMap[_budget.YearMonth] = budgetFor1Day
     })
 
@@ -37,5 +37,7 @@ export class BudgetService {
     return this.budget
   }
 
-
+  getSingleBudgetOfMonth(_budget) {
+    return _budget.Amount / this.getDaysInMonth(_budget, 'YYYYMM');
+  }
 }
