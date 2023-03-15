@@ -2,7 +2,7 @@ const dayjs = require('dayjs')
 
 export class BudgetService {
   monthMap = {}
-  budget = 0
+  totalAmount = 0
 
   constructor(budgetRepo) {
     this.budgetRepo = budgetRepo;
@@ -14,7 +14,7 @@ export class BudgetService {
     return data;
   }
 
-  query(start, end) {
+  queryWithLoopDay(start, end) {
     const allBudget = this.queryDB();
 
     allBudget.forEach((_budget) => {
@@ -24,11 +24,21 @@ export class BudgetService {
     let loop = new Date(start)
     while (loop <= new Date(end)) {
       let curr = dayjs(loop).format('YYYYMM')
-      const budget = this.monthMap[curr] || 0
-      this.budget += budget
+      this.totalAmount += this.monthMap[curr] || 0
       loop = dayjs(loop).add(1, 'd')
     }
-    return this.budget
+    return this.totalAmount
   }
 
+  queryWithLoopBudget(start, end) {
+    if (dayjs(start) > dayjs(end)) {
+      return 0
+    }
+
+    const allBudget = this.queryDB()
+    let totalBudget = allBudget.reduce((val, _budget) => {
+      return _budget.calculate(start, end) + val
+    }, 0)
+    return totalBudget;
+  }
 }
