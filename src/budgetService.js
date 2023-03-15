@@ -6,8 +6,8 @@ export class BudgetService {
   monthMap = {}
   budget = 0
 
-  constructor() {
-    this.budgetRepo = new BudgetRepo();
+  constructor(budgetRepo) {
+    this.budgetRepo = budgetRepo;
   }
 
   getDayOfMonth(_budget, format) {
@@ -15,7 +15,8 @@ export class BudgetService {
   }
 
   queryDB() {
-    return this.budgetRepo.getAll();
+    const data = this.budgetRepo.getAll();
+    return data;
   }
 
   query(start, end) {
