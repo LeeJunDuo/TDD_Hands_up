@@ -35,10 +35,6 @@ export class BudgetService {
       return 0
     }
 
-    const allBudget = this.queryDB()
-    let totalBudget = allBudget.reduce((val, _budget) => {
-      return _budget.calculate(start, end) + val
-    }, 0)
-    return totalBudget;
+    return this.queryDB().reduce((val, _budget) => _budget.calculate(start, end) + val, 0);
   }
 }
