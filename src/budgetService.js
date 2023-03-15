@@ -6,13 +6,20 @@ export class BudgetService {
   monthMap = {}
   budget = 0
 
+  constructor() {
+    this.budgetRepo = new BudgetRepo();
+  }
+
   getDayOfMonth(_budget, format) {
     return dayjs(_budget.YearMonth, format).daysInMonth();
   }
 
+  queryDB() {
+    return this.budgetRepo.getAll();
+  }
+
   query(start, end) {
-    let budgetRepo = new BudgetRepo();
-    const allBudget = this.queryDB(budgetRepo);
+    const allBudget = this.queryDB();
 
     allBudget.forEach((_budget) => {
       const budgetFor1Day = _budget.Amount / this.getDayOfMonth(_budget, 'YYYYMM')
@@ -29,7 +36,5 @@ export class BudgetService {
     return this.budget
   }
 
-  queryDB(budgetRepo) {
-    return budgetRepo.queryDB();
-  }
+
 }
