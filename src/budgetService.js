@@ -1,5 +1,3 @@
-import { BudgetRepo } from "./budgetRepo";
-
 const dayjs = require('dayjs')
 
 export class BudgetService {
@@ -10,9 +8,6 @@ export class BudgetService {
     this.budgetRepo = budgetRepo;
   }
 
-  getDaysInMonth(_budget, format) {
-    return dayjs(_budget.YearMonth, format).daysInMonth();
-  }
 
   queryDB() {
     const data = this.budgetRepo.getAll();
@@ -23,8 +18,7 @@ export class BudgetService {
     const allBudget = this.queryDB();
 
     allBudget.forEach((_budget) => {
-      const budgetFor1Day = this.getSingleBudgetOfMonth(_budget)
-      this.monthMap[_budget.YearMonth] = budgetFor1Day
+      this.monthMap[_budget.YearMonth] = _budget.getSingleBudgetOfMonth()
     })
 
     let loop = new Date(start)
@@ -37,7 +31,4 @@ export class BudgetService {
     return this.budget
   }
 
-  getSingleBudgetOfMonth(_budget) {
-    return _budget.Amount / this.getDaysInMonth(_budget, 'YYYYMM');
-  }
 }

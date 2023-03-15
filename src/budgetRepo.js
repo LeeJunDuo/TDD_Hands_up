@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export class BudgetRepo {
   constructor() {
     this.data = [
@@ -17,4 +19,11 @@ export class Budget {
   }
   YearMonth;
   Amount;
+  getSingleBudgetOfMonth() {
+    return this.Amount / this.getDaysInMonth( 'YYYYMM');
+  }
+
+  getDaysInMonth( format) {
+    return dayjs(this.YearMonth, format).daysInMonth();
+  }
 }
